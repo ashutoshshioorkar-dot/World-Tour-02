@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Tour . Eiffel Tower</title>
+    <link rel="stylesheet" href="eiffel_tower.css">
+    <link rel="stylesheet" href="../worldtour2ndpage/2page.css">
+</head>
+<body>
+
+    <div id="heading">
+        <h1 id="head_world_tour">World tours</h1>
+    </div>
+
+    <div id="back_button">
+        <a href="../worldtour2ndpage/2page.html" class="btn-back" aria-label="Back to World Tours Page">&larr; Back</a>
+    </div>
+
+    <div id="images">
+        <!-- Arranged as a 2x2 grid (same rules from linked 2page.css) -->
+        <div class="tour_container">
+            <img src="ifell_tower.jpg" alt="Eiffel main" id="ifell_tower" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="ifell_tower2.jpg" alt="pair 2-4" id="pair24" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="ifell_tower3.jpg" alt="pair 3-5" id="pair35" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="ifell_tower6.jpg" alt="pair 6-7" id="pair67" class="tour_img">
+        </div>
+    </div>
+
+    <!-- Right-side text panel (reuses styles from ../worldtour2ndpage/2page.css -> #options_list) -->
+    <div id="options_list">
+        <h2 id="options_title">Eiffel Tower</h2>
+        <div style="color: beige; font-size: 15px; line-height: 1.5;">
+            <p>
+                The Taj Mahal is a highly significant monument located in Agra, Uttar Pradesh, India. It is one of the most beautiful examples of Mughal architecture and history. The Taj Mahal was built by Shah Jahan; its construction started in 1632 and took almost 22 years to complete, finishing around 1653.
+            </p>
+            <p>
+                In this project more than 20,000 workers, including artisans, calligraphers, and craftsmen, contributed to its construction. It is also known as the "symbol of love".
+            </p>
+        </div>
+        <div style="margin-top:16px;">
+            <a href="../book now and detail/booknow.html" class="btn-book" target="_blank">Book Now</a>
+        </div>
+    </div>
+
+    <script>
+        // Reusable paired cube-flip function
+        function startPairedFlip(imgEl, imgs, intervalMs) {
+            if (!imgEl) return;
+            let idx = 0;
+            let rotating = false;
+
+            setInterval(() => {
+                if (rotating) return;
+                rotating = true;
+                imgEl.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                imgEl.style.transform = 'rotateY(90deg)';
+
+                setTimeout(() => {
+                    idx = (idx + 1) % imgs.length;
+                    imgEl.src = imgs[idx];
+                    imgEl.style.transform = 'rotateY(180deg)';
+
+                    setTimeout(() => {
+                        imgEl.style.transform = 'rotateY(0deg)';
+                        rotating = false;
+                    }, 500);
+                }, 500);
+            }, intervalMs);
+        }
+
+        // Main Eiffel image (optional pair with ifell_tower1)
+        startPairedFlip(document.getElementById('ifell_tower'), ['ifell_tower.jpg', 'ifell_tower1.jpg'], 3000);
+
+        // Requested pairs: 2<->4, 3<->5, 6<->7
+        startPairedFlip(document.getElementById('pair24'), ['ifell_tower2.jpg', 'ifell_tower4.jpg'], 3000);
+        startPairedFlip(document.getElementById('pair35'), ['ifell_tower3.jpg', 'ifell_tower5.jpg'], 3000);
+        startPairedFlip(document.getElementById('pair67'), ['ifell_tower6.jpg', 'ifell_tower7.jpg'], 3000);
+    </script>
+
+    <script>
+        // Position #back_button horizontally aligned with the images' left edge
+        // and placed just above the images (below heading).
+        (function(){
+            const btn = document.getElementById('back_button');
+            const images = document.getElementById('images');
+            if(!btn || !images) return;
+
+            function alignBack(){
+                const imgRect = images.getBoundingClientRect();
+                const btnRect = btn.getBoundingClientRect();
+                const scrollY = window.scrollY || window.pageYOffset;
+                const scrollX = window.scrollX || window.pageXOffset;
+
+                // Align left with images container's left edge
+                const left = Math.round(scrollX + imgRect.left);
+                // Place button just above images container
+                const top = Math.round(scrollY + imgRect.top - btnRect.height - 12);
+
+                btn.style.left = left + 'px';
+                btn.style.top = top + 'px';
+            }
+
+            window.addEventListener('load', alignBack);
+            window.addEventListener('resize', alignBack);
+            // adjust after short delay for images/fonts
+            setTimeout(alignBack, 250);
+        })();
+    </script>
+
+</body>
+</html>

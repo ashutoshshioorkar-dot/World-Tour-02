@@ -1,0 +1,90 @@
+body{
+    background-color: #002341;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   
+}
+
+/* Heading Section */
+#heading {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 150px;
+    width: auto;
+    padding-top: 20px;
+}
+
+/* Reusable image container + image styles to match world tour page */
+.tour_container {
+    perspective: 1000px;
+    width: 100%;
+    height: 200px;
+    position: relative;
+}
+
+.tour_img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transform-origin: center;
+    display: block;
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.tour_container:hover .tour_img{
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Small override to move the right-side options/text panel further right
+   so it doesn't overlap the images on the page. */
+
+#options_list {
+    /* position: absolute; */
+    right: 250px;
+    /* increase width so it doesn't crowd the images */
+    min-width: 420px;
+    width: 500px;
+    padding: 20px 36px 30px 36px;
+}
+
+/* Larger title and paragraph text for readability */
+#options_list #options_title {
+    font-size: 32px;
+    margin-bottom: 18px;
+}
+
+#options_list .options_text {
+    color: beige;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Back button placement and style */
+#back_button {
+    position: absolute;
+    top: calc(150px + 12px);
+    left: 20px;
+    z-index: 1000;
+}
+.btn-back { display:inline-block; background:aquamarine; color:#002341; font-weight:700; padding:8px 12px; border-radius:8px; text-decoration:none; box-shadow:0 6px 18px rgba(0,0,0,0.25); transition:transform 140ms ease, box-shadow 140ms ease }
+.btn-back:hover { transform:translateY(-3px); box-shadow:0 10px 26px rgba(0,0,0,0.3) }
+
+/* Book button matching site theme */
+.btn-book {
+    display: inline-block;
+    background: aquamarine;
+    color: #002341;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.btn-book:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(127,255,212,0.18); }

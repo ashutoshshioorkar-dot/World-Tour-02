@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>World Tour . Great Wall</title>
+	<link rel="stylesheet" href="wallofchina.css">
+	<link rel="stylesheet" href="../worldtour2ndpage/2page.css">
+</head>
+<body>
+
+	<div id="heading">
+		<h1 id="head_world_tour">World tours</h1>
+	</div>
+
+	<div id="back_button">
+		<a href="../worldtour2ndpage/2page.html" class="btn-back" aria-label="Back to World Tours Page">&larr; Back</a>
+	</div>
+
+	<div id="images">
+		<!-- Arranged as a 2x2 grid (same rules from linked 2page.css) -->
+		<div class="tour_container">
+			<img src="wall_of_china.jpg" alt="Wall main" id="wall_of_china" class="tour_img">
+		</div>
+		<div class="tour_container">
+			<img src="wall_of_china2.jpg" alt="pair 2-4" id="pair24" class="tour_img">
+		</div>
+		<div class="tour_container">
+			<img src="wall_of_china3.jpg" alt="pair 3-5" id="pair35" class="tour_img">
+		</div>
+		<div class="tour_container">
+			<img src="wall_of_china6.jpg" alt="pair 6-7" id="pair67" class="tour_img">
+		</div>
+	</div>
+
+	<!-- Right-side text panel (reuses styles from ../worldtour2ndpage/2page.css -> #options_list) -->
+	<div id="options_list">
+		<h2 id="options_title">Great Wall</h2>
+		<div class="options_text">
+			<p>
+				The Great Wall of China is an ancient series of walls and fortifications located in northern China, built to protect the Chinese states and empires against invasions. Construction started as early as the 7th century BC and continued through the Ming dynasty.
+			</p>
+			<p>
+				Thousands of workers contributed to its construction over many centuries. Replace this text with any specific facts or travel information you'd like displayed.
+			</p>
+		</div>
+		<div style="margin-top:16px;">
+			<a href="../book now and detail/booknow.html" class="btn-book" target="_blank">Book Now</a>
+		</div>
+	</div>
+
+	<script>
+		// Reusable paired cube-flip function
+		function startPairedFlip(imgEl, imgs, intervalMs) {
+			if (!imgEl) return;
+			let idx = 0;
+			let rotating = false;
+
+			setInterval(() => {
+				if (rotating) return;
+				rotating = true;
+				imgEl.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
+				imgEl.style.transform = 'rotateY(90deg)';
+
+				setTimeout(() => {
+					idx = (idx + 1) % imgs.length;
+					imgEl.src = imgs[idx];
+					imgEl.style.transform = 'rotateY(180deg)';
+
+					setTimeout(() => {
+						imgEl.style.transform = 'rotateY(0deg)';
+						rotating = false;
+					}, 500);
+				}, 500);
+			}, intervalMs);
+		}
+
+		// Main wall image (optional pair with wall_of_china1)
+		startPairedFlip(document.getElementById('wall_of_china'), ['wall_of_china.jpg', 'wall_of_china1.jpg'], 3000);
+
+		// Requested pairs: 2<->4, 3<->5, 6<->7 (using wall_of_china images)
+		startPairedFlip(document.getElementById('pair24'), ['wall_of_china2.jpg', 'wall_of_china4.jpg'], 3000);
+		startPairedFlip(document.getElementById('pair35'), ['wall_of_china3.jpg', 'wall_of_china5.jpg'], 3000);
+		startPairedFlip(document.getElementById('pair67'), ['wall_of_china6.jpg', 'wall_of_china7.jpg'], 3000);
+	</script>
+
+	<script>
+		// Align back button horizontally with images container
+		(function(){
+			const btn = document.getElementById('back_button');
+			const images = document.getElementById('images');
+			if(!btn || !images) return;
+			function align(){
+				const imgRect = images.getBoundingClientRect();
+				const btnRect = btn.getBoundingClientRect();
+				const scrollX = window.scrollX || window.pageXOffset;
+				const scrollY = window.scrollY || window.pageYOffset;
+				btn.style.left = (Math.round(scrollX + imgRect.left)) + 'px';
+				btn.style.top = (Math.round(scrollY + imgRect.top - btnRect.height - 12)) + 'px';
+			}
+			window.addEventListener('load', align);
+			window.addEventListener('resize', align);
+			setTimeout(align, 250);
+		})();
+	</script>
+
+</body>
+</html>
+

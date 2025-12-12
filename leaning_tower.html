@@ -1,0 +1,107 @@
+<!DOCTYPE html>html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Tour . Leaning Tower</title>
+    <link rel="stylesheet" href="leaning_tower.css">
+    <link rel="stylesheet" href="../worldtour2ndpage/2page.css">
+</head>
+<body>
+
+    <div id="heading">
+        <h1 id="head_world_tour">World tours</h1>
+    </div>
+
+    <div id="back_button">
+        <a href="../worldtour2ndpage/2page.html" class="btn-back" aria-label="Back to World Tours Page">&larr; Back</a>
+    </div>
+
+    <div id="images">
+        <!-- Arranged as a 2x2 grid (same rules from linked 2page.css) -->
+        <div class="tour_container">
+            <img src="slant_tower.jpg" alt="Leaning main" id="slant_tower" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="slant_tower2.jpg" alt="pair 2-4" id="pair24" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="slant_tower3.jpg" alt="pair 3-5" id="pair35" class="tour_img">
+        </div>
+        <div class="tour_container">
+            <img src="slant_tower6.jpg" alt="pair 6-7" id="pair67" class="tour_img">
+        </div>
+    </div>
+
+    <!-- Right-side text panel (reuses styles from ../worldtour2ndpage/2page.css -> #options_list) -->
+    <div id="options_list">
+        <h2 id="options_title">Leaning Tower</h2>
+        <div class="options_text">
+            <p>
+                The Leaning Tower page mirrors the Eiffel Tower layout, showing paired image transitions and an informational panel.
+            </p>
+            <p>
+                Replace this text with details about the Leaning Tower if you'd like. Images used here should be named `slant_tower.jpg`, `slant_tower1.jpg`, `slant_tower2.jpg`, `slant_tower3.jpg`, `slant_tower4.jpg`, `slant_tower5.jpg`, `slant_tower6.jpg`, and `slant_tower7.jpg`.
+            </p>
+        </div>
+        <div style="margin-top:16px;">
+            <a href="../book now and detail/booknow.html" class="btn-book" target="_blank">Book Now</a>
+        </div>
+    </div>
+
+    <script>
+        // Reusable paired cube-flip function
+        function startPairedFlip(imgEl, imgs, intervalMs) {
+            if (!imgEl) return;
+            let idx = 0;
+            let rotating = false;
+
+            setInterval(() => {
+                if (rotating) return;
+                rotating = true;
+                imgEl.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                imgEl.style.transform = 'rotateY(90deg)';
+
+                setTimeout(() => {
+                    idx = (idx + 1) % imgs.length;
+                    imgEl.src = imgs[idx];
+                    imgEl.style.transform = 'rotateY(180deg)';
+
+                    setTimeout(() => {
+                        imgEl.style.transform = 'rotateY(0deg)';
+                        rotating = false;
+                    }, 500);
+                }, 500);
+            }, intervalMs);
+        }
+
+        // Main slant image (optional pair with slant_tower1)
+        startPairedFlip(document.getElementById('slant_tower'), ['slant_tower.jpg', 'slant_tower1.jpg'], 3000);
+
+        // Requested pairs: 2<->4, 3<->5, 6<->7 (using slant_tower images)
+        startPairedFlip(document.getElementById('pair24'), ['slant_tower2.jpg', 'slant_tower4.jpg'], 3000);
+        startPairedFlip(document.getElementById('pair35'), ['slant_tower3.jpg', 'slant_tower5.jpg'], 3000);
+        startPairedFlip(document.getElementById('pair67'), ['slant_tower6.jpg', 'slant_tower7.jpg'], 3000);
+    </script>
+
+    <script>
+        // Align back button horizontally with images container
+        (function(){
+            const btn = document.getElementById('back_button');
+            const images = document.getElementById('images');
+            if(!btn || !images) return;
+            function align(){
+                const imgRect = images.getBoundingClientRect();
+                const btnRect = btn.getBoundingClientRect();
+                const scrollX = window.scrollX || window.pageXOffset;
+                const scrollY = window.scrollY || window.pageYOffset;
+                btn.style.left = (Math.round(scrollX + imgRect.left)) + 'px';
+                btn.style.top = (Math.round(scrollY + imgRect.top - btnRect.height - 12)) + 'px';
+            }
+            window.addEventListener('load', align);
+            window.addEventListener('resize', align);
+            setTimeout(align, 250);
+        })();
+    </script>
+
+</body>
+</html>

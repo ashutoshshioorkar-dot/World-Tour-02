@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Receipt</title>
+    <link rel="stylesheet" href="booknow.css">
+    <style>
+        body { background: #002341; font-family: Arial, sans-serif; }
+        .receipt-wrap { max-width: 820px; margin: 28px auto; padding: 20px; }
+        .receipt { background: #ffffff; color:#002341; border-radius: 8px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+        .receipt-header { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #e6e6e6; padding-bottom:12px; }
+        .brand h1 { margin:0; color:#002341; font-size:20px; }
+        .brand small { display:block; color:#007bff; }
+        .meta { text-align:right; color:#555; font-size:13px; }
+        .customer { display:flex; justify-content:space-between; gap:16px; margin-top:14px; }
+        .customer > div { flex:1; }
+        .items { width:100%; border-collapse:collapse; margin-top:18px; }
+        .items th, .items td { padding:10px 8px; border-bottom:1px solid #f1f1f1; text-align:left; }
+        .items thead th { background:#f9fafb; color:#333; }
+        .total-label { text-align:right; font-weight:700; }
+        tfoot td { padding:10px 8px; }
+        .grand { font-size:18px; color:#002341; }
+        .notes { margin-top:12px; color:#333; font-size:13px; }
+        .actions { margin-top:18px; text-align:right; }
+        .pay-btn { background: aquamarine; color:#002341; padding:10px 16px; border-radius:6px; border:none; font-weight:700; cursor:pointer }
+        .print-btn { background: aquamarine; color:#002341; padding:10px 14px; border-radius:6px; border:2px solid rgba(0,0,0,0.08); font-weight:700; cursor:pointer; margin-left:10px }
+        @media (max-width:600px){ .customer { flex-direction:column; } .meta { text-align:left; margin-top:8px; } }
+        @media print {
+            body { background: #fff; }
+            #heading, .actions, .pay-btn, .print-btn { display: none !important; }
+            .receipt { box-shadow: none; border-radius: 0; }
+            .receipt-wrap { margin: 0; padding: 0; }
+        }
+
+        /* QR modal */
+        .qr-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); z-index: 9999; }
+        .qr-modal.show { display: flex; }
+        .qr-modal .dialog { background: #fff; color:#002341; padding:18px; border-radius:8px; max-width:420px; width:92%; box-shadow:0 10px 30px rgba(0,0,0,0.3); text-align:center; }
+        .qr-modal .dialog h3 { margin-top:0; color:#002341; }
+        .qr-modal img { width:280px; height:280px; max-width:100%; border-radius:6px; background:#fff; display:block; margin:12px auto; }
+        .qr-modal .close { background:#002341; color:aquamarine; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; margin-top:8px; font-weight:700 }
+        .qr-modal .download-btn { background: aquamarine; color:#002341; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; margin-top:8px; font-weight:700; margin-left:8px }
+        .qr-modal .small { font-size:13px; color:#444; margin-top:6px }
+    </style>
+</head>
+<body>
+    <div id="heading">
+        <h1 id="head_world_tour">Payment Receipt</h1>
+    </div>
+
+    <div class="receipt-wrap">
+        <div class="receipt" id="receipt">
+            <div class="receipt-header">
+                <div class="brand">
+                    <h1>World Tours</h1>
+                    <small>Booking Receipt</small>
+                </div>
+                <div class="meta">
+                    <div>Receipt #: <span id="rcpt-no">—</span></div>
+                    <div>Date: <span id="rcpt-date">—</span></div>
+                </div>
+            </div>
+
+                <div class="qr-modal" id="qrModal" aria-hidden="true">
+                    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+                        <h3 id="qrTitle">Scan to Pay</h3>
+                        <img src="" alt="QR code" id="qrImage">
+                        <div class="small" id="qrText">&nbsp;</div>
+                        <div style="margin-top:10px; display:flex; justify-content:center; gap:8px;">
+                            <button class="download-btn" id="downloadQr" type="button">Download QR (pay.jpg)</button>
+                            <button class="close" id="closeQr">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="customer">
+                <div class="bill-to">
+                    <strong>Customer</strong>
+                    <p id="cust-name">—</p>
+                    <p id="cust-email">—</p>
+                    <p id="cust-phone">—</p>
+                </div>
+                <div class="booking-info">
+                    <strong>Booking</strong>
+                    <p>Tour: <span id="tour-name">—</span></p>
+                    <p>Start: <span id="start">—</span></p>
+                    <p>End: <span id="end">—</span></p>
+                    <p>People: <span id="people">—</span></p>
+                </div>
+            </div>
+
+            <table class="items" aria-label="receipt items">
+                <thead>
+                    <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+                </thead>
+                <tbody id="items-body">
+                </tbody>
+                <tfoot>
+                    <tr><td colspan="3" class="total-label">Subtotal</td><td id="subtotal">—</td></tr>
+                    <tr><td colspan="3" class="total-label">Tax (5%)</td><td id="tax">—</td></tr>
+                    <tr><td colspan="3" class="total-label grand">Grand Total</td><td id="grand">—</td></tr>
+                </tfoot>
+            </table>
+
+            <div class="notes" id="notes">&nbsp;</div>
+
+            <div class="actions">
+                <button class="pay-btn" id="payNow">Proceed to Pay</button>
+                <button class="print-btn" id="printBtn" type="button">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            const raw = sessionStorage.getItem('bookingData');
+            let booking = null;
+            if(raw){ try{ booking = JSON.parse(raw); } catch(e){ booking = null; } }
+            const el = id => document.getElementById(id);
+
+            function fmt(n){ return typeof n === 'number' ? '$' + n.toFixed(2) : n; }
+
+            if(!booking){
+                el('items-body').innerHTML = '<tr><td colspan="4">No booking data found. Please return to booking.</td></tr>';
+                el('notes').textContent = 'No booking data available in sessionStorage.';
+                el('payNow').disabled = true;
+                return;
+            }
+
+            el('cust-name').textContent = booking.name || '—';
+            el('cust-email').textContent = booking.email || '—';
+            el('cust-phone').textContent = booking.phone || '—';
+            el('tour-name').textContent = booking.tour || '—';
+            el('start').textContent = booking.start || '—';
+            el('end').textContent = booking.end || '—';
+            const people = parseInt(booking.people,10) || 1;
+            el('people').textContent = people;
+
+            // pricing (example): default price per person
+            const pricePerPerson = 999; // adjust as needed
+            const itemTotal = pricePerPerson * people;
+            const subtotal = itemTotal;
+            const tax = +(subtotal * 0.05).toFixed(2);
+            const grand = +(subtotal + tax).toFixed(2);
+
+            el('items-body').innerHTML = `
+                <tr>
+                  <td>${booking.tour || 'Tour Package'}</td>
+                  <td>${people}</td>
+                  <td>${fmt(pricePerPerson)}</td>
+                  <td>${fmt(itemTotal)}</td>
+                </tr>`;
+
+            el('subtotal').textContent = fmt(subtotal);
+            el('tax').textContent = fmt(tax);
+            el('grand').textContent = fmt(grand);
+
+            el('notes').textContent = booking.extra ? ('Notes: ' + booking.extra) : '';
+
+            // receipt meta
+            el('rcpt-no').textContent = 'RCPT-' + Math.floor(Math.random()*900000 + 100000);
+            el('rcpt-date').textContent = new Date().toLocaleString();
+
+            el('payNow').addEventListener('click', async function(){
+                // Prefer showing a local 'pay.jpg' as the QR. If missing, fall back to a generated QR.
+                const receipt = el('rcpt-no').textContent || ('RCPT-' + Math.floor(Math.random()*900000 + 100000));
+                const amountStr = (typeof grand !== 'undefined') ? ('' + grand) : el('grand').textContent || '';
+                const payload = `PAYMENT|${receipt}|${booking.name || ''}|${booking.email || ''}|AMT:${amountStr}`;
+                const encoded = encodeURIComponent(payload);
+                const googleQr = `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${encoded}`;
+                const qrImg = el('qrImage');
+                const qrText = el('qrText');
+
+                // Try to load local pay.jpg first
+                const localPath = 'pay.jpg';
+                let usedSrc = '';
+                try{
+                    const resp = await fetch(localPath, { method: 'GET' });
+                    if(resp.ok){
+                        usedSrc = localPath;
+                    } else {
+                        usedSrc = googleQr;
+                    }
+                }catch(e){
+                    // fetch failed, fallback to google
+                    usedSrc = googleQr;
+                }
+
+                qrImg.src = usedSrc;
+                qrText.textContent = `Receipt: ${receipt} — Amount: ${amountStr}`;
+
+                const modal = document.getElementById('qrModal');
+                if(modal){ modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+            });
+            const printBtn = el('printBtn');
+            if(printBtn){
+                printBtn.addEventListener('click', function(){
+                    window.print();
+                });
+            }
+
+            // QR modal close
+            const closeQr = el('closeQr');
+            const qrModal = document.getElementById('qrModal');
+            if(closeQr && qrModal){
+                closeQr.addEventListener('click', function(){ qrModal.classList.remove('show'); qrModal.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; });
+                qrModal.addEventListener('click', function(e){ if(e.target === qrModal){ qrModal.classList.remove('show'); qrModal.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; } });
+            }
+
+            // Download QR as pay.jpg
+            const downloadQrBtn = el('downloadQr');
+            if(downloadQrBtn){
+                downloadQrBtn.addEventListener('click', async function(){
+                    try{
+                        const src = el('qrImage').src;
+                        if(!src) return alert('No QR available to download.');
+                        // fetch the image and save as pay.jpg
+                        const resp = await fetch(src);
+                        if(!resp.ok) throw new Error('Failed to fetch image');
+                        const blob = await resp.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'pay.jpg';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                    }catch(err){
+                        console.error(err);
+                        alert('Could not download QR image.');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

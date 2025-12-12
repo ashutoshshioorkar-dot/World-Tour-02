@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Tour</title>   
+    <link rel="stylesheet" href="2page.css">
+</head>
+<body>
+
+    <div id="heading">
+        <h1 id="head_world_tour">World tours</h1>
+    </div>
+
+    <div id="images">
+
+        <div id="ifell_tower_container">
+            <img src="ifell_tower.jpg" alt="tower"  id="ifell_tower">
+        </div>
+        <div id="slant_tower_container">
+            <img src="slant_tower.jpg" alt="tower"  id="slant_tower">
+        </div>
+        <div id="tajmahal_container">
+            <img src="tajmahal.jpg" alt="mahal"  id="tajmahal">
+        </div>
+        <div id="wall_of_china_container">
+            <img src="wall of china.jpg" alt="wall" id="wall_of_china">
+        </div>
+
+    </div>
+
+    <div id="options_list">
+        <h2 id="options_title">choose your tour</h2>
+        <ul id="options_menu">
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\particular pages\eiffel_tower.html" class="option_link"  >Eiffel Tower Tour</a></li>
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\particular pages\leaning_tower.html" class="option_link" >Leaning Tower Tour</a></li>
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\particular pages\tajmahal.html" class="option_link" >Taj Mahal Tour</a></li>
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\particular pages\wallofchina.html" class="option_link" >Great Wall Tour</a></li>
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\book now and detail\details.html" class="option_link" >Package Deals</a></li>
+            <li><a href="D:\Ashutosh_01\Cursor\Ite Html\ite\book now and detail\booknow.html" class="option_link" >Book Now</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Image rotation for Eiffel Tower with cube effect
+        const eiffelTower = document.getElementById('ifell_tower');
+        const images = ['ifell_tower.jpg', 'ifell_tower1.jpg'];
+        let currentImageIndex = 0;
+        let isRotating = false;
+
+        function rotateImage() {
+            if (isRotating) return;
+            isRotating = true;
+            
+            // Start cube rotation - rotate to 90 degrees (edge view)
+            eiffelTower.style.transform = 'rotateY(90deg)';
+            
+            setTimeout(() => {
+                // Change image source at midpoint when image is edge-on (not visible)
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                eiffelTower.src = images[currentImageIndex];
+                
+                // Complete the cube flip to 180 degrees
+                eiffelTower.style.transform = 'rotateY(180deg)';
+                
+                setTimeout(() => {
+                    // Reset rotation back to 0 degrees for next cycle
+                    eiffelTower.style.transform = 'rotateY(0deg)';
+                    isRotating = false;
+                }, 500);
+            }, 500);
+        }
+
+        // Start rotation every 5 seconds
+        setInterval(rotateImage, 5000);
+
+        // Image rotation for Slant Tower with cube effect
+        const slantTower = document.getElementById('slant_tower');
+        const slantImages = ['slant_tower.jpg', 'slant_tower1.jpg'];
+        let currentSlantImageIndex = 0;
+        let isSlantRotating = false;
+
+        function rotateSlantImage() {
+            if (isSlantRotating) return;
+            isSlantRotating = true;
+            
+            // Start cube rotation - rotate to 90 degrees (edge view)
+            slantTower.style.transform = 'rotateY(90deg)';
+            
+            setTimeout(() => {
+                // Change image source at midpoint when image is edge-on (not visible)
+                currentSlantImageIndex = (currentSlantImageIndex + 1) % slantImages.length;
+                slantTower.src = slantImages[currentSlantImageIndex];
+                
+                // Complete the cube flip to 180 degrees
+                slantTower.style.transform = 'rotateY(180deg)';
+                
+                setTimeout(() => {
+                    // Reset rotation back to 0 degrees for next cycle
+                    slantTower.style.transform = 'rotateY(0deg)';
+                    isSlantRotating = false;
+                }, 500);
+            }, 500);
+        }
+
+        // Start rotation every 5 seconds
+        setInterval(rotateSlantImage, 5000);
+
+        // Image rotation for Taj Mahal with cube effect
+        const tajmahal = document.getElementById('tajmahal');
+        const tajmahalImages = ['tajmahal.jpg', 'tajmahal1.jpg'];
+        let currentTajmahalImageIndex = 0;
+        let isTajmahalRotating = false;
+
+        function rotateTajmahalImage() {
+            if (isTajmahalRotating) return;
+            isTajmahalRotating = true;
+            
+            // Start cube rotation - rotate to 90 degrees (edge view)
+            tajmahal.style.transform = 'rotateY(90deg)';
+            
+            setTimeout(() => {
+                // Change image source at midpoint when image is edge-on (not visible)
+                currentTajmahalImageIndex = (currentTajmahalImageIndex + 1) % tajmahalImages.length;
+                tajmahal.src = tajmahalImages[currentTajmahalImageIndex];
+                
+                // Complete the cube flip to 180 degrees
+                tajmahal.style.transform = 'rotateY(180deg)';
+                
+                setTimeout(() => {
+                    // Reset rotation back to 0 degrees for next cycle
+                    tajmahal.style.transform = 'rotateY(0deg)';
+                    isTajmahalRotating = false;
+                }, 500);
+            }, 500);
+        }
+
+        // Start rotation every 5 seconds
+        setInterval(rotateTajmahalImage, 5000);
+
+        // Image rotation for Wall of China with cube effect
+        const wallOfChina = document.getElementById('wall_of_china');
+        const wallOfChinaImages = ['wall of china.jpg', 'wall_of_china1.jpg'];
+        let currentWallOfChinaImageIndex = 0;
+        let isWallOfChinaRotating = false;
+
+        function rotateWallOfChinaImage() {
+            if (isWallOfChinaRotating) return;
+            isWallOfChinaRotating = true;
+            
+            // Start cube rotation - rotate to 90 degrees (edge view)
+            wallOfChina.style.transform = 'rotateY(90deg)';
+            
+            setTimeout(() => {
+                // Change image source at midpoint when image is edge-on (not visible)
+                currentWallOfChinaImageIndex = (currentWallOfChinaImageIndex + 1) % wallOfChinaImages.length;
+                wallOfChina.src = wallOfChinaImages[currentWallOfChinaImageIndex];
+                
+                // Complete the cube flip to 180 degrees
+                wallOfChina.style.transform = 'rotateY(180deg)';
+                
+                setTimeout(() => {
+                    // Reset rotation back to 0 degrees for next cycle
+                    wallOfChina.style.transform = 'rotateY(0deg)';
+                    isWallOfChinaRotating = false;
+                }, 500);
+            }, 500);
+        }
+
+        // Start rotation every 5 seconds
+        setInterval(rotateWallOfChinaImage, 5000);
+    </script>
+</body>
+</html> 
